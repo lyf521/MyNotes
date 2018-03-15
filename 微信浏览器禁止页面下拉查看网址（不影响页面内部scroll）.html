@@ -8,6 +8,10 @@
 
 
 <script>
+    //clientHeight 浏览器可视图大小
+    //scrollTop 滚动条距离顶部的距离
+    //scrollHeight 包含滚动内容的元素总高度（可滚动高度）
+    //offsetHeight 自身元素的高度
     var overscroll = function(el) {
         el.addEventListener('touchstart', function() {
             var top = el.scrollTop
