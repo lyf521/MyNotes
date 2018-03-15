@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>asp.net</title>
+</head>
+<body>
+<h5>razor、html——组建</h5>
+<div>
+    <p>Session["user_id"]</p>
+    <p>@string.Format("{0:g}",item.date)</p>
+    <p>@Html.GetCommonValue_ID("运输作业状态",(int)(item.ZYZT == null ? 0 : item.ZYZY))</p>
+    <P>@Html.GetDateValue_ID("公司","名称",(int)item.GongSi)</P>
+    <p>string.IsNullOrEmpty(item.TPL)</p>
+    <p>@Html.SelectList_Auto("Gongsi","公司","")</p>
+    <p>@Html.PageListPaper((IpagedList)Model,page => Url.Action("Index",new{page}))</p>
+    <p>@Html.Search_Condition((int)Session["user_id"],"部门_条件组合查询", "/base_bumen/index", "base_bumenindex", scms)</p>
+</div>
+<script>
+    //页面遍历循环
+    @foreach(var item in ViewBag.fast_zuoyegz){
+        //全局数据
+        Session["user_id"]
+        //日期格式 yyyy-mm-dd ss:mm
+        @string.Format("{0:g}",item.date)
+            //根据id在global里面获取中文名称
+        <td>@Html.GetCommonValue_ID("运输作业状态", (int)(item.ZYZT == null ? 0 : item.ZYZT))</td>
+        //根据id 在 Model 里面获取 中文名称
+        <td>@Html.GetDataValue_ID("公司", "名称", (int)item.Gongsi)</td>
+        //判断空、null
+        if(!string.IsNullOrEmpty(item.TP1)){}
+        //下拉列表组件——生成select——根据Model——默认无选中项
+        @Html.SelectList_Auto("Gongsi", "公司", "")
+        //下拉列表组件——生成select——根据global——默认选中value = 0的 option
+        @Html.SelectList_Common("YSLX","运输委托类型"，0)
+        //分页组件
+        @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page }))
+        //查询组件
+        @Html.Search_Condition((int)Session["user_id"], "部门_条件组合查询", "/base_bumen/index", "base_bumenindex", scms)
+        //表单名组件——生成label
+        @Html.LabelFor(m => m.Jiage, new{ @class = "control-label col-sm-2"})
+        //输入框组件——生成input
+        @Html.TextBoxFor(m => m.Jiage,new{@class = "form-control"})
+
+		
+		
+                var _mtlx = _lx.Find(p => p.Zhonglei == "码头堆场" && p.Mingcheng == tempData.Liexing.Trim());
+                if (_mtlx != null)
+                {
+                    ViewBag.mtlx = _mtlx.Mingcheng;
+                    ViewBag.mtlxid = _mtlx.ID;
+                }
+    }
+
+</script>
+<h5>controller</h5>
+<script>
+
+</script>
+</body>
+</html>

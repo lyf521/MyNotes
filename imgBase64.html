@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片转base64上传</title>
+</head>
+<body>
+<script>
+    function imgupload(obj) {
+        var self = this;
+        var files = event.target.files;
+        var type = files[0].type.split('/')[0];
+        if(type != 'image'){
+            //判断是否为图片
+            alert('请上传图片')
+            return;
+        }
+        //判断图片大小
+        var size = Math.floor(files.size/1024/1024);
+        if (size > 3){
+            alert('图片大小不得超过3M');
+            return;
+        }
+        //图片处理，可用于多张图片上传，也可单张上传
+        for (var i = 0;i<files.length;i++){
+            var reader = new FileReader();
+            reader.readAsDataURL(files[i]);
+            reader.onloadstart = function () {
+                //文件上传前执行的事件
+                alert('开始上传')
+            };
+            reader.onloadend = function (e) {
+                //文件上传中
+                var dataURL = this.result;
+                var imaged = new Image();
+                imaged.src = dataURL;
+                imaged.onload = function () {
+                    //利用canvas对图片进行压缩
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+                    var w = 0,h = 0;
+                    if ( this.width > this.height){
+                        h = 750;
+                        var scale = this.width / this.height;
+                        h = h > this.height ? this.height : h;
+                        w = h * scale;
+                    }else {
+                        w = 750;
+                        var scale = this.width/this.height;
+                        w = w > this.width ? this.width : w;
+                        h = w / scale;
+                    }
+                    var anw = document.createAttribute('width');
+                    var anh = document.createAttribute('height');
+                    if ( this.width > this.height){
+                        anw.value = h;
+                        anh.value = w;
+                    }else {
+                        anw.value = w;
+                        anh.value = h;
+                    }
+                    canvas.setAttributeNode(anw);
+                    canvas.setAttributeNode(anh);
+                    if (this.width > this.height){
+                        ctx.translate(h,0);
+                        ctx.rotate( 90 * Math.PI / 180 );
+                        ctx.drawImage(this,0,0,w,h);
+                        ctx.restore();
+                    }else {
+                        ctx.drawImage(this,0,0,w,h);
+                    }
+                    //canvas 转文件格式，及压缩质量
+                    dataURL = canvas.toDataURL('image/jpeg',0.7);
+                    //回调函数向数据库提交数据
+                    $.ajax({
+                        type:'POST',
+                        url:'http://www.58teu.com/upload/UploadPicture',
+                        async:false,
+                        data:{source:dataURL},
+                        dataType:'json',
+                        success:function (res) {
+
+                        },
+                        error:function (res) {
+
+                        }
+                    })
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

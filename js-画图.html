@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<canvas height="600" width="800" id="canvas"></canvas>
+<div id='tuxing'></div>
+<script>
+    //定义点的函数
+    function Point(x,y) {
+        this.x = x;
+        this.y = y;
+    }
+    //构造器 Line 计算直线的距离  利用勾股定理 a²+b²=c²
+    //Math.sqrt(num)   返回num的平方根
+    // Math.pow(底数,几次方)
+    function Line(p1, p2) {
+        this.p1 = p1;
+        this.p2 = p2;
+        console.log(p2)
+        this.length = Math.sqrt( Math.pow((p2.x-p1.x),2) + Math.pow((p2.y-p1.y),2)
+        );
+    }
+    // 绘制图形 自己的点 points  链接point点的 Lines 属性  初始化方法 init()
+    function  Shape() {
+        this.points = [];
+        this.lines = [];
+        this.init();
+    }
+    // 定义 Shape.Prototype 的方法。
+    Shape.prototype ={
+        // reset pointer to constructor
+        constructor:Shape,
+
+        // initialization,sets this.context to point
+        //to the context if the canvas object
+        init:function () {
+            if (this.context === undefined){
+                var canvas = document.getElementById('canvas');
+                Shape.prototype.context = canvas.getContext('2d');
+            }
+        },
+
+        // method that draws a shape by looping through this.points
+        draw:function () {
+            var i,ctx = this.context;
+            ctx.strokeStyle = this.getColor();
+            ctx.beginPath();
+            ctx.moveTo(this.points[0].x, this.points[0].y);
+            for(i = 1;i<this.points.length;i++){
+                ctx.lineTo(this.points[i].x, this.points[i].y);
+            }
+            ctx.closePath();
+            ctx.stroke();
+        },
+
+        // method that generates a random color
+        getColor:function () {
+            var i,rgb = [];
+            for(i=0; i < 3 ;i++){
+                rgb[i] = Math.round(255 * Math.random());
+            }
+            return 'rgb(' + rgb.join(',') +')';
+        },
+
+        // method that loops through the points array,
+        // creates Line instances and adds them to this.lines
+        getLines:function () {
+            if(this.lines.length > 0){
+                return this.lines;
+            }
+            var i,lines=[];
+            for(i = 0;i < this.points.length;i++){
+                lines[i] = new Line(this.points[i],this.points[i + 1] || this.points[0]);
+            }
+            this.lines = lines;
+            return lines;
+        },
+
+        // shell method, to be implemented by children
+        getArea:function () { },
+
+        //sums the lengths of all lines
+        getPerimeter:function () {
+            var i, perim = 0, lines = this.getLines();
+            for( i = 0; i<lines.length;i++){
+                perim += lines[i].length;
+            }
+            return perim;
+        }
+    }
+
+    // 子对象构造 ， 三角形面积 用海伦公式 是s(s-a)(s-b)(s-c) s为半周长
+    function Triangle(a,b,c) {
+        this.points = [a,b,c];
+        this.getArea = function () {
+            var p = this.getPerimeter();
+            s = p/2;
+            return Math.sqrt(s*(s - this.lines[0].length)*(s - this.lines[1].length)*(s - this.lines[2].length));
+        }
+    }
+
+    // rectang  构造器 长方形
+    function Rectangle(p,side_a,side_b) {
+        this.points = [
+            p,
+            new Point(p.x + side_a, p.y),
+            new Point(p.x + side_a, p.y+side_b),
+            new Point(p.x, p.y + side_b)
+        ];
+        this.getArea = function () {
+            return side_a * side_b;
+        }
+    }
+    // Square 正方形
+    function Square(p,side) {
+        Rectangle.call(this,p,side,side)
+    }
+
+    // 通过原型共享
+    (function () {
+        var s = new Shape();
+        Triangle.prototype = s;
+        Rectangle.prototype = s;
+        Square.prototype = s;
+    })()
+
+    //测试
+    var p1 = new Point(100,100);
+    var p2 = new Point(300,100);
+    var p3 = new Point(200,0);
+    var t = new Triangle(p1,p2,p3);
+    t.draw();
+	document.getElementById('tuxing').innerHTML += '三角形周长:'+t.getPerimeter()+'<br>'
+	document.getElementById('tuxing').innerHTML += '三角形面积:'+t.getArea()+'<br>'
+	console.log('三角形周长:'+t.getPerimeter())
+	console.log('三角形面积:'+t.getArea())
+    //t.getPerimeter();
+    
+
+    var  r = new Rectangle(new Point(200,200),50,100);
+    r.draw();
+	console.log('长方形周长:'+r.getPerimeter())
+	console.log('长方形面积:'+r.getArea())
+	document.getElementById('tuxing').innerHTML += '长方形周长:'+r.getPerimeter()+'<br>'
+	document.getElementById('tuxing').innerHTML += '长方形面积:'+r.getArea()+'<br>'
+  
+
+    var s =new Square(new Point(130,130),50);
+    s.draw();
+	console.log('大正方周长:'+s.getPerimeter())
+	console.log('大正方面积:'+s.getArea())
+	document.getElementById('tuxing').innerHTML += '大正方周长:'+s.getPerimeter()+'<br>'
+	document.getElementById('tuxing').innerHTML += '大正方面积:'+s.getArea()+'<br>'
+    //console.log( s.getArea())
+    //s.getPerimeter();
+
+    new Square(p1,200).draw()
+</script>
+</body>
+</html>

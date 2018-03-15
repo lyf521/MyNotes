@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="a"  style="width: 300px;height: 300px;background: red;">
+    <div id="b" onclick="stopBubble()" style="width: 100px;height: 100px;background:yellow;">
+
+    </div>
+</div>
+<script>
+    var a=document.getElementById("a");
+    var b=document.getElementById("b");
+    a.addEventListener('click',function(){
+        b.style.display="none";
+		stopBubble()
+    })
+   function stopBubble(e)
+{
+    if (e && e.stopPropagation)
+        e.stopPropagation()
+    else
+        window.event.cancelBubble=true
+}
+</script>
+</body>
+</html>
