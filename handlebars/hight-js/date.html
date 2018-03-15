@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>时间日期转换</title>
+</head>
+<body>
+<script>
+    /*将Date转化为指定格式的string：月（M）、日（d）、12小时（h）、24小时（H）、分（m）、妙（s）、周（E）、季度（q）可以用1-2个占位符
+    *年（y）可以用1-4个占位符， 毫秒（S）只能用1个占位符（是1-3位的数字）
+     * eg: (new Date()).pattern("yyyy-MM-dd E HH:mm:ss.S")==>2017-07-02 08:09:04.423
+     * eg: (new Date()).pattern("yyyy-MM-dd E HH:mm:ss")==>2017-07-10 五 20:09:04
+     * eg: (new Date()).pattern("yyyy-MM-dd EE HH:mm:ss")==>2017-12-29 周五 15:24:06
+     * eg: (new Date()).pattern("yyyy-M-d h:m:s.S")==> 2016-7-2 8:9:4.18
+    */
+    Date.prototype.pattern = function (str) {
+        var o = {
+            "M+" : this.getMonth()+1, //月份
+            "d+" : this.getDate(),//日
+            "h+" : this.getHours()%12 == 0 ? 12: this.getHours()%12,//12制小时
+            "H+" : this.getHours(),//24制小时
+            "m+" : this.getMinutes(),//分
+            "s+" : this.getSeconds(),//秒
+            "q+" : Math.floor((this.getMonth()+3)/3)+"季度",//季度
+            "S" : this.getMilliseconds()//毫秒
+        };
+        var week = {
+            "0" : "\u65e5",//一
+            "1" : "\u4e00",//二
+            "2" : "\u4e8c",//三
+            "3" : "\u4e09",//四
+            "4" : "\u56db",//五
+            "5" : "\u4e94",//六
+            "6" : "\u516d",//日
+        };
+        if(/(y+)/.test(str)){
+            str = str.replace(RegExp.$1,(this.getFullYear()+"").substr(4-RegExp.$1.length));
+        }
+        if (/(E+)/.test(str)){
+            str = str.replace(RegExp.$1,((RegExp.$1.length>1) ? (RegExp.$1.length>2 ? "\u661f\u671f":"\u5468"):"")+week[this.getDay()+""]);
+        }
+        for (var k in o){
+            if(new RegExp("("+k+")").test(str)){
+                str=str.replace(RegExp.$1,(RegExp.$1.length ==1) ? (o[k]):(("00"+o[k]).substr((""+o[k]).length)))
+            }
+        }
+        return str;
+    }
+    var date = new Date();
+    window.document.write(date.pattern("yyyy-MM-dd EE hh:mm:ss.S")+"<br>"+date.pattern("yy-MM-dd E HH:mm:ss.s q"));
+    //window.document(body).text = date.pattern("yyyy-MM-dd hh:mm:ss.S");
+    //window.document(body).text = date.pattern("yyyy-MM-dd hh:mm:ss.S");
+</script>
+</body>
+</html>
