@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>省市县镇</title>
+</head>
+<body>
+<div>
+    <div >
+        <select name="sheng" id="sheng" ></select>
+        <select name="shi" id="shi">
+            <option value="">-请选择-</option>
+        </select>
+        <select name="xian" id="xian">
+            <option value="">-请选择-</option>
+        </select>
+        <select name="xiang" id="xiang">
+            <option value="">-请选择-</option>
+        </select>
+        <input type="text" id="carry_address" name="carry_address" placeholder="请输入详细地址">
+    </div>
+</div>
+</body>
+<script src="JS/jquery-2.1.4.js"></script>
+<script src="JS/GlobalProvinces_main.js"></script>
+<script src="JS/GlobalProvinces_extend.js"></script>
+<script src="JS/initLocation.js"></script>
+<script>
+    initLocation()
+</script>
+</html>

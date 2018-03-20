@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script>
+    //特权函数  是不是闭包？
+    //私有函数的公有化
+    var MYAPP = {};
+    MYAPP.dom = (function(){
+        var _setStyle = function(el,prop,value){
+            console.log('setStyle');
+        };
+        var _getStyle = function(el,prop){
+            console.log('getStyle');
+        };
+        return {
+            setStyle:_setStyle,
+            getStyle:_getStyle,
+            yetAnother:_setStyle
+        };
+    });
+    MYAPP.dom.setStyle = MYAPP.dom.yetAnother;
+
+    MYAPP.dom.setStyle = function(){alert('b');};//指向新的方法
+    MYAPP.dom.setStyle() != MYAPP.dom.yetAnother();//还是指向_setStyle()
+
+    //命名空间——全局变量
+    var MYAPP = MYAPP || {};
+    MYAPP.event = {};
+    //添加方法
+    MYAPP.event = {
+        addListener:function (el,type,fn) {
+            //监听事件··
+        },
+        removeListener:function (el,type,fn) {
+            //···
+        },
+        getEvent:function (e) {
+            //··
+        }
+        //··other methods or properties
+    };
+    //为全局变量MYAPP的方法添加构造器
+    MYAPP.dom = {};
+    MYAPP.dom.Element = function (type,properties) {
+        //创建DOM元素
+        var tmp = document.createElement(type);
+        for (var i in properties){
+            if (properties.hasOwnProperty(i)){
+                tmp.setAttribute(i,properties[i]);
+            }
+        }
+        return tmp;
+    };
+    MYAPP.dom.Text = function (txt) {
+        //创建文本节点
+        return document.createTextNode(txt);
+    };
+    //MYAPP 方法的应用——在网页底部创建一个包含 'click me'文本的 a 链接
+    var link = new MYAPP.dom.Element('a',{href:'http://phpied.com',target:'_blank'});
+    var text = new MYAPP.dom.Text('click me');
+    link.appendChild(text);
+    document.body.appendChild(link);
+</script>
+</html>
