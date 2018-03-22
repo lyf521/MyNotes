@@ -21,8 +21,8 @@ function initLocation(option)
 		xian_val:"",		//默认县
 		xiang_val:""		//默认乡镇
 	},option||{});
-	
-	
+
+
 	if(option.sheng_val == ""){
 		option.sheng_val == "-1";
 	}

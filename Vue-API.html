@@ -23,7 +23,7 @@
             <dd>默认值：{}</dd>
             <dd>用法：Vue.config.optionMergeStrategies._my_option = funciton(parent,child,vm){return child+1}
                 const Profile = Vue.extend({
-                    _my_option:1
+                _my_option:1
                 })
                 //Profile.options._my_option = 2
                 自定义合并策略的选项
@@ -31,107 +31,197 @@
             </dd>
         </dl>
     </li>
-
+    <li>devtools——配置是否允许vue-devtools检查代码</li>
+    <li>errorHandler——指定组件的渲染和观察期未捕获错误的处理函数。这个处理函数被调用时，可获取错误信息和Vue实例</li>
+    <li>warnHandler——未vue的运行时警告赋予一个自定义处理函数。注意这只会在开发者环境下生效，在生产环境下它会被忽略</li>
+    <li>ignoredElements——须使Vue忽略在Vue之外的自定义元素（e.g.使用了Web Components APIs）否则，它会假设你忘记注册全局组件或者拼错了组件名称，从而抛出一个关于Unknown custom element的警告</li>
+    <li>keyCodes——给 v-on 自定义键位别名</li>
+    <li>performance——设置为true 以在浏览器开发工具的性能/时间线面板中启用对组件初始化、编译、渲染和打补丁的性能追踪。只适用于开发模式和支持 performance.mark API的浏览器上</li>
+    <li>productionTip——设置未false以阻止vue在启动时生成生产提示</li>
 </ul>
+<h5>全局API</h5>
 <ul>
-    <li># beforeUpdate——数据更新时调用，发生在虚拟DOM打补丁之前。这里适合在更新之前访问现有的DOM，比如手动移除已添加的事件监听器。<strong>该钩子在服务器端渲染期间不被调用，因为只有初次渲染会在服务端进行。</strong></li>
-    <li># updated——由于数据更改导致的虚拟DOM重新渲染和打补丁，在这之后会调用该钩子。
-        <br>当这个钩子被调用时，组件DOM已经更新，所以你现在可以执行依赖于DOM的操作。然而在大多数情况下，你应该避免在此期间更改状态。如果要相应状态改变，通常最好使用计算属性或watcher取而代之。
-        <br>注意 updated 不会承诺所有的子组件也都一起被重绘。如果你希望等到整个视图都重绘完毕，可以用vm.$nextTick 替换掉 updated：
-        <strong>该钩子在服务器端渲染期间不被调用。</strong>
-    </li>
-    <li># activated—— keep-alive 组件激活时调用。该钩子在服务器端渲染期间不被调用。</li>
-    <li># deactivated——keep-alive 组建停用时调用。该钩子在服务器端渲染期间不被调用。</li>
-    <li># beforeDestroy—— 实例销毁之前调用。在这一步，实例仍然完全可用。 该钩子在服务器端渲染期间不被调用</li>
-    <li># destroyed——Vue实例销毁后调用。调用后，Vue实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。***该钩子在服务器端渲染期间不被调用。</li>
-    <li># errorCaptured——当捕获一个来自子孙组件的错误时被调用。此钩子会受到三个参数：错误对象、发生错误的组件实例以及一个包含错误来源信息的字符串。此钩子可以返回 false 以阻止该错误继续向上传播。
-    <em>**你可以在此钩子中修改组件的状态。因此在模板或渲染函数中设置其它内容的短路条件非常重要，它可以防止当一个错误被捕获时该组件进入一个无限的渲染循环。**</em>
-        <h6>错误传播规则</h6>
-        <ul>
-            <li>默认情况下，如果全局的 config.errorHandler 被定义，所有的错误仍会发送它，因此这些错误仍然会向单一的分析服务的地方进行汇报。</li>
-            <li>如果一个组件的继承或父级从属链路中存在多个 errorCaptured 钩子，则他们将会被相同的错误逐个唤起。</li>
-            <li>如果此 errorCaptured 钩子自身抛出了一个错误，则这个新错误和原本被捕获的错误都会发送给全局的 config.errorHandler</li>
-            <li>一个 errorCaptured 钩子能够返回 false 以阻止错误继续向上传播。本质上是说“这个错误已经被搞定了且应该被忽略”。它会阻止其它任何会被这个错误唤起的 errorCaptured 钩子和全局的 config.errorHandler</li>
-        </ul>
-    </li>
+    <li>Vue.extend(options)——使用基础Vue构造器，创建一个“子类”。参数是一个包含组件选项的对象。 data选项是特例，需要注意-在 Vue.extend()中它必须是函数</li>
+    <li>Vue.nextTick([callback,context])——在下次DOM更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的DOM</li>
+    <li>Vue.set(target,key,value)——设置对象的属性。如果对象是响应式的，确保属性被创建后也是响应式的，同时触发视图更新。这个方法主要用于避开Vue不能检测属性被添加的限制。***注意对象不能使Vue实例，或者Vue实例根数据对象。</li>
+    <li>Vue.delete(target,key)——删除对象的属性。如果对象是响应式的，确保删除能触发更新视图。这个方法主要用于避开Vue不能检测到属性被删除的限制，但是你应该很少会使用它。*****目标对象不能是一个Vue实例或Vue实例的根数据对象。</li>
+    <li>Vue.directive(id,[definition])——注册或获取全局指令。</li>
+    <li>Vue.filter(id,[definition])——注册或获取全局过滤器</li>
+    <li>Vue.component(id,[definition])——注册或获取全局组件。注册还会自动使用给定的id设置组件的名称</li>
+    <li>Vue.use(plugin)——安装Vue.js插件。如果插件是一个对象，必须提供install方法。如果插件是一个函数，它会被作为install方法。install方法调用时，会将Vue作为参数传入。***当install方法被同一个插件多次调用，插件将只会被安装一次</li>
+    <li>Vue.mixin(mixin)——全局注册是一个混入，影响注册之后所有创建的每个Vue实例。插件作者可以使用混入，向组件注入自定义的行为。不推荐在应用代码中使用。</li>
+    <li>Vue.compile(template)——在render函数中编译模板字符串。只在独立构建时有效</li>
+    <li>Vue.version()——提供字符串形势的Vue安装版本号。这对社区的插件和组件来说非常有用，你可以根据不同的版本号采取不同的策略。</li>
 </ul>
-<h5>选项/资源</h5>
-</body>
-<script>
- /*# devtools
- * 类型：boolean
- * 默认值：true（生产版为false）
- * 用法：
- * */
-    //务必在加载vue之后，立即同步设置一下内容
-    Vue.config.devtools = true
-    //配置是否允许vue-devtools检查代码。开发版本默认为true，生产版本默认为false。生产版本为true可以启用检查
+<h5>选项/数据</h5>
+<ul>
+    <li>data——Vue实例的数据对象。Vue将会递归将data的属性转换为getter/setter，从而让data的属性能够响应数据变化。对象必须是纯粹的对象（含有零个或多个的key/value对）：浏览器API创建的原生对象，原型上的属性会被忽略。大概来说，data应该只能是数据-不推荐观察拥有状态行为的对象。<br>一但观察过，不需要再次在数据对象上添加响应式属性。因此推荐在创建实例之前，就声明所有的根级响应式属性。<br>实例创建之后，可以通过vm.$data 访问原始数据对象。Vue实例也代理了data对象上所有的属性，因此访问 vm.a 等价于访问 vm.$data.a。<br>以 _ 或 $ 开头的属性不会被Vue实例代理，因为他们可能和Vue内置的属性、API方法冲突。你可以使用例如 vm.$data._property 的方式访问这些属性。
+        <br>当一个组件被定义，data必须声明为返回一个初始数据对象的函数，因为组件可能被用来创建多个实例。如果 data 仍然是一个纯粹的对象，则所有的实例将共享引用同一个数据对象！通过提供data函数，每次创建一个新实例后，我们能够调用 data 函数，从而返回初始数据的一个全新副本数据对象。
+        <br>如果需要，可以通过将 vm.$data 传入 JSON.parse(JSON.stringify(···)) 得到深拷贝的原始数据对象</li>
+    <li>props——props可以是数组或对象，用于接受来自父组件的数据。props可以是简单的数组，或者使用对象作为替代，对象允许配置高级选项，如：类型检测、自定义校验和设置默认值。</li>
+    <li>propsData——*只用于 new 创建的实例中。* 创建实例时传递props。主要作用是方便测试。</li>
+    <li>computed——计算属性将被混入到Vue实例中。所有getter和setter的this上下文自动地绑定未Vue实例。——计算属性的结果会被缓存，除非依赖的响应式属性变化才会重新计算。注意，如果某个依赖（比如非响应式属性）在该实例范畴之外，则计算属性是不会被更新的。</li>
+    <li>methods——methods将被混入到Vue实例中。可以直接通过VM实例访问这些方法，或者在指令表达式中使用。方法中的this自动绑定为Vue实例。</li>
+    <li>watch——一个对象，键是需要观察的表达式，值是对应回调函数。值也可以是方法名，或者包含选项的对象。Vue实例将会在实例化时调用 $watch(),遍历watch对象的每一个属性。</li>
+</ul>
+<h5>选项/DOM</h5>
+<ul>
+    <li># el——*只在由 new 创建的实例中遵守。*提供一个在页面上已存在的DOM元素作为Vue实例的挂载目标。可以是CSS选择器，也可以是一个HTMLElement实例。
+        <br>在实例挂在之后，元素可以用 vm.$el 访问。
+        <br>如果这个选项在实例化时有作用，实例将立即进入编译过程，否则，需要显式调用 vm.$mount() 手动开启编译。</li>
+    <li># template——一个字符串模板作为Vue实例的标识使用。模板将会 替换 挂载的元素。挂载元素的内容都将被忽略，除非模板的内容有分发插槽。
+        <br>如果值以 # 开始，则它将被用作选择符，并使用匹配元素的innerHTML作为模板。常用的技巧是用<script type="x-template">包含模板。</li>
+        <li># render——字符串模板的代替方案，允许你发挥javaScript最大的编程能力。该渲染函数接受一个createElement方法作为第一个参数用来创建 VNode。
+            <br>如果组件是一个函数组件，渲染函数还会接受一个额外的 context参数，为没有实例的函数组件提供上下文信息。</li>
+        <li># renderError——*只在开发环境下工作。当render函数遭遇错误时，提供另外一种渲染输出。其错误将会作为第二个参数传递到renderError。这个功能配合hot-reload非常实用。</li>
+        </ul>
+        <h5>选项/生命周期钩子</h5>
+        <p>所有的生命周期钩子自动绑定 this 上下文到实例中，因此你可以访问数据，对属性和方法进行运算。这意味着 你不能使用箭头函数来定义一个生命周期方法（例如 created:() => this.fetchTodos()）。这是因为箭头函数绑定了父上下文，因此 this 与你期待的Vue实例不同，this.fetchTodos 的行为未定义。</p>
+        <ul>
+            <li># beforeCreate——在实例初始化之后，数据观测（data observer）和 event/watcher 事件配置之前被调用</li>
+            <li># created——在实例创建完成后被立即调用。在这一步，实例已完成一下的配置：数据观测（data observer），属性 和方法的运算，watch/event事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。</li>
+            <li># beforeMount ——在挂载开始之前被调用：相关的 render 函数首次被调用。<br><strong>该钩子在服务器端渲染期间不被调用。</strong></li>
+            <li># mounted —— el 被新创建的 vm.$el 替换，并挂载到实例上去之后调用该钩子。如果root实例挂载了一个文档内元素，当 mounted 被调用时 vnm.$el 也在文档内。
+                <br>注意 mounted 不会承诺所有的子组件也都一起被挂载。如果你希望等到整个视图都渲染完毕，可以用 vm.$nextTick 替换掉 mounted; <strong>该钩子在服务器端渲染期间不被调用</strong>
+            </li>
+            <li># beforeUpdate——数据更新时调用，发生在虚拟DOM打补丁之前。这里适合在更新之前访问现有的DOM，比如手动移除已添加的事件监听器。<strong>该钩子在服务器端渲染期间不被调用，因为只有初次渲染会在服务端进行。</strong></li>
+            <li># updated——由于数据更改导致的虚拟DOM重新渲染和打补丁，在这之后会调用该钩子。
+                <br>当这个钩子被调用时，组件DOM已经更新，所以你现在可以执行依赖于DOM的操作。然而在大多数情况下，你应该避免在此期间更改状态。如果要相应状态改变，通常最好使用计算属性或watcher取而代之。
+                <br>注意 updated 不会承诺所有的子组件也都一起被重绘。如果你希望等到整个视图都重绘完毕，可以用vm.$nextTick 替换掉 updated：
+                <strong>该钩子在服务器端渲染期间不被调用。</strong>
+            </li>
+            <li># activated—— keep-alive 组件激活时调用。该钩子在服务器端渲染期间不被调用。</li>
+            <li># deactivated——keep-alive 组建停用时调用。该钩子在服务器端渲染期间不被调用。</li>
+            <li># beforeDestroy—— 实例销毁之前调用。在这一步，实例仍然完全可用。 该钩子在服务器端渲染期间不被调用</li>
+            <li># destroyed——Vue实例销毁后调用。调用后，Vue实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。***该钩子在服务器端渲染期间不被调用。</li>
+            <li># errorCaptured——当捕获一个来自子孙组件的错误时被调用。此钩子会受到三个参数：错误对象、发生错误的组件实例以及一个包含错误来源信息的字符串。此钩子可以返回 false 以阻止该错误继续向上传播。
+                <em>**你可以在此钩子中修改组件的状态。因此在模板或渲染函数中设置其它内容的短路条件非常重要，它可以防止当一个错误被捕获时该组件进入一个无限的渲染循环。**</em>
+                <h6>错误传播规则</h6>
+                <ul>
+                    <li>默认情况下，如果全局的 config.errorHandler 被定义，所有的错误仍会发送它，因此这些错误仍然会向单一的分析服务的地方进行汇报。</li>
+                    <li>如果一个组件的继承或父级从属链路中存在多个 errorCaptured 钩子，则他们将会被相同的错误逐个唤起。</li>
+                    <li>如果此 errorCaptured 钩子自身抛出了一个错误，则这个新错误和原本被捕获的错误都会发送给全局的 config.errorHandler</li>
+                    <li>一个 errorCaptured 钩子能够返回 false 以阻止错误继续向上传播。本质上是说“这个错误已经被搞定了且应该被忽略”。它会阻止其它任何会被这个错误唤起的 errorCaptured 钩子和全局的 config.errorHandler</li>
+                </ul>
+            </li>
+        </ul>
+        <h5>选项/资源</h5>
+        <ul>
+            <li># directives——包含Vue实例可用指令的哈希表</li>
+            <li># filters——包含Vue实例可用过滤器的哈希表</li>
+            <li># components——包含Vue实例可用组件的哈希表</li>
+        </ul>
+        <h5>选项/组合</h5>
+        <ul>
+            <li># parent——指定已创建的实例之父实例，在两者之间建立父子关系。子实例可以用 this.$parent 访问父实例，子实例被推入父实例的 $children 数组中
+                <strong>节制的使用 $parent 和 $children -它们的主要目的是作为访问组件的应急方法。更推荐用props 和 events实现父子组件通信</strong>
+            </li>
+            <li># mixins——mixins 选项接受一个混入对象的数组。这些混入实例对象可以像正常的实例对象一样包含选项，他们将在 Vue.extend() 里最终选择使用相同的选项合并逻辑合并。举例：如果你的混入包含一个钩子而创建组件本身也有一个，两个函数将被调用。Mixin钩子按照传入顺序依次调用，并在调用组件自身的钩子之前被调用。</li>
+            <li># extends——允许声明扩展另一个组件（可以是一个简单的选项对象或构造函数），而无需使用Vue.extend。这主要是为了便于扩展单文件组件。 这和mixins类似。</li>
+            <li># provide/inject——**provide 和 inject 主要为高阶插件/组件库提供用例。并不推荐直接用于应用程序代码中。**
+                <em>这对选项需要一起使用，以允许一个祖先组件向其所有子孙后代注入一个依赖，不论组建层次有多深，并在起上下游关系成立的时间里始终生效。如果你熟悉React，这与React的上下文特性很相似。</em><br>
+                <em>provide 选项应该是一个对象或返回一个对象的函数。该对象包含可注入其子孙的属性。在该对象中你可以使用ES2015 Symbols作为key，但是只在原生支持 Symbol 和 Reflect.ownkeys 的环境下可工作。</em>
+                <em>inject选项应该是：一个字符串数组，或一个对象，对象的key是本地的绑定名，value是：在可用的注入内容中搜索用的key（字符串或Symbol），或一个对象，该对象的：name 属性是在可用的注入内容中搜索用的key（字符串或Symbol） default 属性是降级情况下使用的value</em>
+                <strong>提示：provide和inject 绑定并不是可响应的。这是刻意为之的。然而，如果你传入了一个可监听的对象，那么其对象的属性还是可响应的。</strong>
+            </li>
+        </ul>
+        <h5>选项/其它</h5>
+        <ul>
+            <li># name ——*只有作为组件选项时起作用****允许组件模板递归地调用自身。注意，组件在全局用 Vue.component() 注册时，全局ID自动作为组件的name。  指定 name 选项的另一个好处是便于调试。有名字的组件有更友好的警告信息。另外，当在有vue-devtools，未命名组件将显示成 <code><AnoymousComponent></code>,这很没有语义。通过提供 neme选项，可以获得更有意义信息的组件树。</li>
+            <li># delimiters——这个选项只在完整构建版本中的浏览器内编译时可用。*改变纯文本插入分隔符。*</li>
+            <li># functional——使组件无状态（没有data）和无实例（没有 this 上下文）。他们用一个简单的 render 函数返回虚拟节点使他们更容易渲染。</li>
+            <li># model——允许一个自定义组件在使用 v-model 时定制prop 和 event。默认情况下，一个组件上的 v-model 会把 value 用作 prop 且把 input用作 event，但是一些输入类型比如单选框和复选框按钮可能想使用 value  prop来达到不同的目的。使用 model 选项可以回避这些情况产生的冲突。</li>
+            <li># inheritAttrs——默认情况下父作用域的不被认作 props 的特性绑定（attribute bindings）将会“回退”且作为普通的HTML特性应用在子组件的根元素上。当撰写包裹一个目标元素或另一个组件的组件时，这可能不会总是符合预期行为。通过设置 inheritAttrs 到false，这些默认行为将会被去掉。而通过（同样是2.4新增的）实例属性 $attrs 可以让这些特性生效，且可以通过 v-bind 显性的绑定到非根元素上。 **注意：这个选项不影响 class 和 style 绑定。*</li>
+            <li># comments——这个选项只在完整构建版本中的浏览器内编译时可用。****当设为 true 时，将会保留且渲染模板中的HTML注释。默认行为是舍弃它们*</li>
+        </ul>
+        <h5>实例属性</h5>
+        <ul>
+            <li># vm.$data——***类型：object *** Vue实例观察的数据对象。Vue实例代理了对其data对象属性的访问</li>
+            <li># vm.$props——****类型：object *** 当前组件接收到的props对象，Vue实例代理了对其props对象属性的访问。</li>
+            <li># vm.$el —— *****类型：HTMLElement**** Vue实例使用的根DOM元素</li>
+            <li># vm.$options —— ***类型：Object* 用于当前Vue实例的初始化选项。需要在选项中包含自定义属性时会有用处。</li>
+            <li># vm.$parent ——***类型：Vue instance *只读*父实例，如果当前有实例的话。</li>
+            <li># vm.$root ——**类型：Vue instance*只读*当前组件树的根Vue实例。如果当前没有父实例，此实例将会是自己。</li>
+            <li># vm.$children ——**类型： Arry<Vue instance>*只读*当前实例的直接子组件。 需要注意 $children 并不保证顺序，也不是响应式的。如果你发现自己正在尝试使用 $children 来进行数据绑定，考虑使用一个数组配合 v-for 来生成子组件，并且使用Array作为真正的来源。</li>
+            <li># vm.$slots ——**<code>类型：{ [name:string]:?Array<VNode> }</code>*只读*用来访问被插槽分发的内容。每个具名插槽有其相应的属性（例如：slot="foo" 中的内容将会在 vm.$slots.foo 中被找到）。default 属性包括了所有没有被包含在具名插槽中的节点。 在使用渲染函数书写一个组件时，访问 vm.$slots 最有帮助。
+            </li>
+        </ul>
+        </body>
+        <script>
+            /*# devtools
+            * 类型：boolean
+            * 默认值：true（生产版为false）
+            * 用法：
+            * */
+            //务必在加载vue之后，立即同步设置一下内容
+            Vue.config.devtools = true
+            //配置是否允许vue-devtools检查代码。开发版本默认为true，生产版本默认为false。生产版本为true可以启用检查
 
- /*# errorHandler
- * 类型：Function
- * 默认值：undefined
- * 用法
- * */
-    Vue.config.errorHandler = function (err,vm,info) {
-        //handle error
-        // info 是Vue特定的错误信息，比如错误所在的生命周期钩子
-        // 只在2.2.0+可用
-    }
-    // 指定组件的渲染和观察期间未捕获错误的处理函数。这个处理函数被调用时，可获取错误信息和Vue实例。
-    //从2.2.0起，这个钩子也会捕获组件生命周期沟子里的错误。同样的，当这个钩子是undefined时，被捕获的错误会通过 console.error 输出而避免应用崩溃
-    //从2.4.0起这个钩子也会捕获Vue自定义事件处理函数内部的错误了
-    //错误追踪服务Sentry和Bugsnag都通过此选项提供了官方支持
+            /*# errorHandler
+            * 类型：Function
+            * 默认值：undefined
+            * 用法
+            * */
+            Vue.config.errorHandler = function (err,vm,info) {
+                //handle error
+                // info 是Vue特定的错误信息，比如错误所在的生命周期钩子
+                // 只在2.2.0+可用
+            }
+            // 指定组件的渲染和观察期间未捕获错误的处理函数。这个处理函数被调用时，可获取错误信息和Vue实例。
+            //从2.2.0起，这个钩子也会捕获组件生命周期沟子里的错误。同样的，当这个钩子是undefined时，被捕获的错误会通过 console.error 输出而避免应用崩溃
+            //从2.4.0起这个钩子也会捕获Vue自定义事件处理函数内部的错误了
+            //错误追踪服务Sentry和Bugsnag都通过此选项提供了官方支持
 
-/*# warnHandler  --2.4.0新增
-*类型：Function
-* 默认值：undefined
-* 用法：*/
-    Vue.config.warnHandler = function (msg,vm,trace) {
-        //trace 是组建的继承关系追踪
-    }
-    //为Vue的运行时警告赋予一个自定义处理函数。注意这只会在开发者环境下生效，在生产环境下它会被忽略。
+            /*# warnHandler  --2.4.0新增
+            *类型：Function
+            * 默认值：undefined
+            * 用法：*/
+            Vue.config.warnHandler = function (msg,vm,trace) {
+                //trace 是组建的继承关系追踪
+            }
+            //为Vue的运行时警告赋予一个自定义处理函数。注意这只会在开发者环境下生效，在生产环境下它会被忽略。
 
-/*# ignoredElements
-* 类型：Array<string | RegExp>
-* 默认值：[]
-* 用法： */
-    Vue.config.ignoredElements = [
-        'my-custom-web-component','another-web-component',
-        //用一个 'RegExp' 忽略所有“ion-”开头的元素
-        //仅在 2.5+ 支持
-        /^ion-/
-    ]
-    //须使Vue忽略在Vue之外的自定义元素（e.g.使用了Web Components APIs）。
-    // 否则，它会假设你忘记注册全局组价或者拼错了组件名称，从而跑出一个关于Unknow custom element 的警告
-
-/*# keyCodes
-* 类型： { [key：string]：number | Array<number>}
-* 默认值：{}
-* 用法：*/
-    Vue.config.keyCode = {
-        v:86,
-        f1:112,
-        //camelCase 不可用
-        mediaPlayPause:179,
-        //取而代之的是 kebab-case 且用双引号括起来
-        "media-play-pause":179,
-        up:[38,87]
-    }
-    <input type="text" @keyup.media-play-pause="method">
-     //给 v-on 自定义键位别名
-
- /*# performance
- * 类型：boolean
- * 默认值：false（自2.2.3起）
- * 用法：*/
-    //设置为true以在浏览器开发工具的性能/时间线面板中启用组件初始化、编译、渲染和打补丁的性能追踪。
-    //只适用于开发模式和支持 performance.mark API 的浏览器上
-
-/*# productionTip
-* 类型：boolean
-* 默认值：true
+            /*# ignoredElements
+            * 类型：Array<string | RegExp>
+            * 默认值：[]
             * 用法： */
-    //设置为false 以阻止vue在启动时生成生产提示
+            Vue.config.ignoredElements = [
+                'my-custom-web-component','another-web-component',
+                //用一个 'RegExp' 忽略所有“ion-”开头的元素
+                //仅在 2.5+ 支持
+                /^ion-/
+            ]
+            //须使Vue忽略在Vue之外的自定义元素（e.g.使用了Web Components APIs）。
+            // 否则，它会假设你忘记注册全局组价或者拼错了组件名称，从而跑出一个关于Unknow custom element 的警告
+
+            /*# keyCodes
+            * 类型： { [key：string]：number | Array<number>}
+            * 默认值：{}
+            * 用法：*/
+            Vue.config.keyCode = {
+                    v:86,
+                    f1:112,
+                    //camelCase 不可用
+                    mediaPlayPause:179,
+                    //取而代之的是 kebab-case 且用双引号括起来
+                    "media-play-pause":179,
+                    up:[38,87]
+                }
+                <input type="text" @keyup.media-play-pause="method">
+            //给 v-on 自定义键位别名
+
+            /*# performance
+            * 类型：boolean
+            * 默认值：false（自2.2.3起）
+            * 用法：*/
+            //设置为true以在浏览器开发工具的性能/时间线面板中启用组件初始化、编译、渲染和打补丁的性能追踪。
+            //只适用于开发模式和支持 performance.mark API 的浏览器上
+
+            /*# productionTip
+            * 类型：boolean
+            * 默认值：true
+            * 用法： */
+            //设置为false 以阻止vue在启动时生成生产提示
 
 
 
@@ -150,5 +240,5 @@
 
 
 
-</script>
+        </script>
 </html>
