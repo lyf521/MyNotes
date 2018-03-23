@@ -145,6 +145,11 @@
             <li># vm.$children ——**类型： Arry<Vue instance>*只读*当前实例的直接子组件。 需要注意 $children 并不保证顺序，也不是响应式的。如果你发现自己正在尝试使用 $children 来进行数据绑定，考虑使用一个数组配合 v-for 来生成子组件，并且使用Array作为真正的来源。</li>
             <li># vm.$slots ——**<code>类型：{ [name:string]:?Array<VNode> }</code>*只读*用来访问被插槽分发的内容。每个具名插槽有其相应的属性（例如：slot="foo" 中的内容将会在 vm.$slots.foo 中被找到）。default 属性包括了所有没有被包含在具名插槽中的节点。 在使用渲染函数书写一个组件时，访问 vm.$slots 最有帮助。
             </li>
+            <li># vm.$scopedSlots——***只读*用来访问作用域插槽。对于包括 默认 slot 在内的每一个插槽，该对象都包含一个返回相应VNode的函数。vm.$scopedSlots 在使用渲染函数开发一个组件时特别有用。</li>
+            <li># vm.$refs ——**类型：Object * 只读 * 一个对象，持有已注册过 ref 的所有组件。</li>
+            <li># vm.$isServer ——**类型：boolean * 只读 * 当前Vue实例是否运行于服务器。</li>
+            <li># vm.$attrs ——**类型：{ [key : sring]: string } * 只读 * 包含了父作用域中不作为prop 被识别（且获取）的特性绑定（class 和 style 除外）。当一个组件没有声明任何 prop 时，这里会包含所有父作用域的绑定 （class 和 style 除外），并且可以通过 v-bind = "$attrs" 传入内部组件——在差un关键更高层次的组件时非常有用。</li>
+            <li># vm.$listeners ——**类型： { [key:string]:Function | Array<Function>} * 只读 *包含了父作用域中的（不含 .native 修饰器的）v-on 事件监听器。它可以通过 v-on="$listeners" 传入内部组件——在创建更高层次的组件时非常有用。</li>
         </ul>
 </body>
 <script>
