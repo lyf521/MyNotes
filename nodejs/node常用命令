@@ -1,0 +1,16 @@
+1.查看版本：npm -v
+2.升级版本：sudo npm install npm -g
+    淘宝镜像米命令：cnpm install npm -g
+3.使用 npm 命令安装模块
+    格式：npm install <Module Name>
+    安装Node.js web 框架模块 express： npm install express
+    代码中使用express： var express = require('express');
+4.全局安装和本地安装
+    A.本地安装：npm install express
+        A.1 将安装包放在 ./node_modules 下（运行npm命令时说在的目录），如果没有node_modules目录，会在当前执行npm命令的目录下生成node_modules目录。
+        A.2 可以通过require()来引入本地安装的包
+    B.全局安装：npm install express -g
+        B.1 将安装包放在/usr/local下或者你node的安装目录。
+        B.2 可以直接在命令行里使用。
+        报错类型： npm err! Error:connect ECONNREFUSED 127.0.0.1:8087
+        解决办法： npm config set proxy null
