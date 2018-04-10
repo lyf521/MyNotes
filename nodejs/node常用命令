@@ -1,6 +1,6 @@
 1.查看版本：npm -v
 2.升级版本：sudo npm install npm -g
-    淘宝镜像米命令：cnpm install npm -g
+    淘宝镜像的命令：cnpm install npm -g
 3.使用 npm 命令安装模块
     格式：npm install <Module Name>
     安装Node.js web 框架模块 express： npm install express
@@ -12,5 +12,90 @@
     B.全局安装：npm install express -g
         B.1 将安装包放在/usr/local下或者你node的安装目录。
         B.2 可以直接在命令行里使用。
+        B.3 查看所有的全局安装的模块：$ npm list -g
+            查看某个模块的版本版本号：$ npm list grunt
         报错类型： npm err! Error:connect ECONNREFUSED 127.0.0.1:8087
         解决办法： npm config set proxy null
+ 5.使package.json
+     package.json 位于模块的目录下，用于定于包的属性。
+     5.1 name - 包名。
+     5.2 version - 包的版号。
+     5.3 description - 包的描述。
+     5.4 homepage - 包的官网url。
+     5.5 author - 包的作者姓名。
+     5.6 contributors - 包的其他贡献者姓名。
+     5.7 dependencies - 依赖包列表，如果依赖包没有安装，npm 会自动将依赖包安装在 node_moudule 目录下。
+     5.8 repository - 包代码存放的地方类型，可以是git 或 svn，git可在Github上。
+     5.9 main - main字段指定了程序的主入口文件，require('moduleName')就会加载这个文件。这个字段的默认值是模块根目录下面的index.js。
+     5.10 keywords - 关键字。
+ 6.卸载模块
+     $ npm uninstall express(模块名字express)
+     卸载后，可以到 /node_modules/ 目录下查看包是否还存在，或者使用以下命令查看： npm ls
+ 7.更新模块
+     $ npm update express（模块名字express）
+ 8.搜做模块
+     $ npm search express(模块名字express)
+ 9.创建模块
+     创建模块，package.json 文件是必不可少的。我们可以使用 NPM 生成 package.json 文件
+     cmd 命令输入： $ npm init  之后会提示输入模块的一系列配置（模块名、描述、github地址、生成地址）；
+     最后看到 Is this ok?(yes) ，最后输入 yes 后会生成package.json 文件
+ 10.在npm资源库中注册用户
+      $ npm adduser
+      Username:
+      Password:
+      Email:(this Is public)
+      发布模块：$ npm publish
+ 11.版本号
+     NPM使用语义版本号来管理代码。语义版本号分为X.Y.Z三位，分别代表主版本号、次版本号和补丁版本号。
+     * 如果只是修复bug，则需要更新Z位；
+     * 如果新增了功能，但是向下兼容，需要更新Y位；
+     * 如果有大的变动，向下不兼容，需要更新X位。
+     版本号有了这个保证后，在申明第三方依赖包时，除了可依赖一个固定版本号外，还可依赖于某个范围的版本号。例如"argv":"0.0.x"表示依赖于0.0.x系列的最新版argv。
+ 12.NPM常用命令
+     * NPM提供了很多命令，例如install和publish，使用npm help可查看所有命令；
+     * 使用npm help <command>可查看某条命令的详细帮助，例如npm help install；
+     * 在package.json所在目录下使用npm install -g可先在本地安装当前命令行程序，可用于发布前的本地测试。
+     * 使用npm updata <package>可以把当前目录下node_moudules子目录里边的对应模块更新至最新版本；
+     * 使用npm updata <pachage> -g可以把全局安装的对应命令行程序更新至最新版；
+     * 使用npm cache clear可以清空NPM本地缓存，用于对付使用相同版本号发布新版本代码的人；
+     * 使用npm unpublish <package>@<version>可以撤销发布自己发布过的某个版本代码
+ 13.使用淘宝NPM镜像
+     淘宝NPM镜像是一个完整的 npmjs.org镜像，你可以用此代替官方版本（只读），同步频率目前为10分钟一次以保证尽量与官方服务同步。
+     你可以使用淘宝定制的cnpm（gzip压缩支持）命令行工具代替默认的npm：
+     $ npm install -g cnpm --registry=https://registry.npm.taobao.org
+     这样就可以使用cnpm命令来安装模块了：
+     $ npm install [name]
+ 14.Node.js REPL(交互式解释器)
+     Node.js REPL(Read Print Loop:交互式解释器)表示一个电脑的环境，类似Window系统的终端或Unix/Linux shell，我们可以在终端中输入命令，并接受系统的响应。
+     Node自带了交互式解释器，可以执行以下任务：
+     * 读取-读取用户输入，解析输入了Javascript 数据结构并存储在内存中。
+     * 执行-执行输入的数据结构。
+     * 打印-输出结果
+     * 循环-循环操作以上步骤知道用户两次按下ctrl-c 按钮退出。
+ 15.开始学习 REPL
+     *** 启动Node 的终端：$ node
+     *** 在命令行窗口可以执行简单的数学运算；
+     A. 变量声明使用 var 关键字，如果不适用 var 关键字变量会直接打印出来；
+         使用 var 关键字的变量可以使用 console.log() 来输出变量
+     B. Node REPL 支持输入多行表达式，回车换行即可。Node 会自动检测是否为连续表达式
+     C. 可以使用下划线（_）获取上一个表达式的运算结果
+     D. REPL 命令
+        * ctrl+c - 退出当前终端；
+        * ctrl+c 按下两次 - 退出Node REPL；
+        * ctrl+d - 退出 Node REPL;
+        * 向上/向下 键 - 列出当前命令
+        * tab 键 - 列出当前命令
+        * .help - 列出使用命令
+        * .break - 退出多行表达式
+        * .clear - 退出多行表达式
+        * .save filename - 保存当前的 Node REPL 会话到指定文件
+        * .load filename - 载入当前Node REPL 会话的文件内容
+     *** 停止REPL：按下两次 ctrl+c 键
+ 16.异步函数读取文件
+     fs.readFile();
+     *** EventEmitter 类
+        events 模块只提供了一个对象：events.EventEmitter的核心就是事件触发与事件监听器功能的封装。
+        A. 引入events模块：var events = require('events');
+        B. 创建 eventEmitter对象：var eventEmitter = new events.EventEmitter();
+
+

@@ -67,4 +67,237 @@
     link.appendChild(text);
     document.body.appendChild(link);
 </script>
+<script>
+    //设计模式：可复用面向对象软件的基础
+        /*
+        * 创建型模式：涉及对象的创建与初始化
+        * 结构型模式：描述了如何组合对象以提供新的功能
+        * 行为型模式：描述了对象之间如何通信
+        * */
+        //**单件模式1：单件是一个创建型的设计模式，主要考虑的是创建对象的方式。
+            //JavaScript没有类的概念，所以单件属于默认行为，也是最自然的模式
+            var single = {}; //JavaScript中最基本的单件模式是 对象文本标识法
+        //**单间模式2： 有一个叫做 Logger（）的构造器
+            var my_log = new Logger();
+            my_log.log('some event');
+            //...1000 lines of code later
+            var other_log = new Logger();
+            other_log.log('some new event');
+            console.log(other_log === my_log); //true
+            /*这段代码的意思：尽管多次使用了new，但是实际上所创建的对象实例却始终只有一个，
+            后续的构造器调用过程中所返回的始终是同一个对象*/
+            //方案一：全局变量--用全局变量保存这个唯一的实例
+            function Logger() {
+                if (typeof global_log === 'undefined'){
+                    global_log = this;
+                }
+                return global_log;
+            }
+            var a = new Logger();
+            var b = new Logger();
+            console.log(a === b); //true
+            //方案二：构造器属性--函数也是一种对象，本身也有属性，所以将实例设置为构造器的属性
+            function Logger() {
+                if (!Logger.single_instance){
+                    Logger.single_instance = this;
+                }
+                return Logger.single_instance;
+            }
+        //**工厂模式：工厂模式也属于创建对象的创建型模式，
+    // 当我们有对各相似的对象而又不知道应该先使用哪种时，就可以使用工厂模式
+            //假设有三个不同的构造器，所使用的功能相似。所创建的对象都接受一个URL类型的参数，但处理细节稍有不同。
+    //分别创建一个文本DOM节点、一个链接以及一个图像。
+            var MYAPP = {};
+            MYAPP.dom = {};
+            MYAPP.dom.Text = function (url) {
+                this.url = url;
+                this.insert = function (where) {
+                    var txt = document.createTextNode(this.url);
+                    where.appendChild(txt);
+                }
+            };
+            MYAPP.dom.Link = function (url) {
+                this.url = url;
+                this.insert = function (where) {
+                    var link = document.createElement('a');
+                    link.href = this.url;
+                    link.appendChild(document.createTextNode(this.url));
+                    where.appendChild(link);
+                }
+            };
+            MYAPP.dom.Image =function (url) {
+                this.url = url;
+                this.insert = function (where) {
+                    var im = document.createElement('img');
+                    img.src = this.url;
+                    where.appendChild(im);
+                }
+            };
+            //三个构造器的方法都一样：设置url 属性并调用insert()方法
+            var url = 'http:www.phpied.com/images/covers/oojs.jpg';
+
+            var o = new MYAPP.dom.Image(url);
+            o.insert(document.body);
+
+            var o = new MYAPP.dom.Text(url);
+            o.insert(document.body);
+
+            var o = new MYAPP.dom.Link(url);
+            o.insert(document.body);
+            //随机创建一种类型image Link Text,创建一个工厂函数
+            MYAPP.dom.factory = function (type, url) {
+                return new MYAPP.dom[type](url);
+            }
+            var image = MYAPP.dom.factory('Image',url);
+            image.insert(document.body);
+            /*//复杂方式
+                var o;
+                if (type === 'Image'){
+                    o = new MYAPP.dom.Image();
+                }
+                if (type === 'Link'){
+                    o = new MYAPP.dom.Link();
+                }
+                if (type === 'Text'){
+                    o = new MYAPP.dom.Text();
+                }
+                o.url = 'http://...'
+                o.insert();*/
+    /**装饰器模式：装饰器模式是一种结构型模式，它与对象的创建无关，主要考虑如何扩展对象的功能。
+    *也就是说，说了使用线性式（父-子-孙）继承方式之外，我们也可以为一个基础对象创建若干个装饰
+    *对象扩展其功能。*/
+        var obj = {
+            doSomething:function () {
+                console.log('sure,asap');
+            }
+            //...
+        };
+        obj = obj.getDecorator('decol');
+        obj = obj.getDecorator('decol3');
+        obj = obj.getDecorator('deco5');
+        obj.doSomething();
+        //装饰一个圣诞树
+         var tree = {};
+         tree.decorate = function () {
+             alert('Make sure the tree won\'t fall');
+         }
+         tree.getDecorator = function (deco) {
+             tree[deco],prototype = this;
+             return new tree[deco];
+         }
+         tree.RedBalls = function () {
+             this.decorate = function () {
+                 this.RedBalls.prototype.decorate();
+                 alert('Put on some red balls');
+             };
+         };
+         tree.BlueBalls = function () {
+             this.decorate = function () {
+                 this.BlueBalls.prototype.decorate();
+                 alert('Add blue balls');
+             };
+         };
+         tree.Angel = function () {
+             this.decorate = function () {
+                 this.Angel.prototype.decorate();
+                 alert('An angel on the top');
+             };
+         };
+         tree = tree.getDecorator('BlueBalls');
+         tree = tree.getDecorator('Angel');
+         tree = tree.getDecorator('RedBalls');
+         //最后，运行decorate()方法
+             tree.decorate();
+             /*/依次弹出
+             * Make sure the tree won't fall
+             * Add blue balls
+             * An angel on the top
+             * Put on some red balls*/
+    /**
+     *观察者模式（发布-订阅模式）：一种行为模式。
+     * 主要处理不同对象之间的交互通信问题。观察者模式中通常会包含两类对象。
+     *   * 一个或多个发布者对象:当有重要的事情发生时，会通知订阅者
+     *   * 一个或多个订阅者对象：它们追随一个或多个发布者，监听他们的通知，并作出相应的反应
+     */
+    //以下是一个观察者对象的实现对象，其中包含了订阅相关的方法，并可以将任意对象转变为发布者，
+    var observer = {
+        addSubscriber:function (callback) {
+            if (typeof callback === "function"){
+                this.subscribers[this.subscribers.length] = callback;
+            }
+        },
+        removeSubscriber:function (callback) {
+            for (var i = 0;i< this.subscribers.length; i++){
+                if (this.subscribers[i] === callback){
+                    delete this.subscribers[i];
+                }
+            }
+        },
+        publish:function (what) {
+            for (var i = 0;i < this.subscribers.length; i++){
+                if (typeof this.subscribers[i] === 'function'){
+                    this.subscribers[i](what);
+                }
+            }
+        },
+        make:function (o) {
+            //turns an object into a publisher
+            for (var i in this){
+                if (this.hasOwnProperty(i)){
+                    o[i] = this[i];
+                    o.subscribers = [];
+                }
+            }
+        }
+    };
+    //下面创建一些订阅者。订阅者可以是任意对象，他们的唯一职责是在某些重要事件发生时调用publish（）方法。
+    //下面是一个blogger对象，每当新博客准备好时，就会调用publish() 方法。
+    var blogger = {
+        writeBlogPost:function () {
+            var content = 'Today is'+ new Date();
+            this.publish(content);
+        }
+    };
+    //另有一个 la_times 对象，每当新一期的报刊出来时，就会调用publish() 方法。
+    var la_times= {
+        newIssue:function () {
+            var paper = 'Martians have landed on Earch!';
+            this.publish(paper);
+        }
+    }
+    //* 它们都很容易转变为发布者；
+    observer.make(blogger);
+    observer.make(la_times);
+    //与此同时，准备两个简单对象 jack 和 jill
+    var jack = {
+        read:function (what) {
+            console.log("I just read that" + what)
+        }
+    };
+    var jill = {
+        gossip:function (what) {
+            console.log("You didn't hear it form me,but"+what)
+        }
+    };
+    //他们可以订阅blogger对象，只需要提供事件发生时的回调函数
+    blogger.addSubscriber(jack.read);
+    blogger.addSubscriber(jill.gossip);
+    //当 blogger写了新的博客时，jack 和 jill 会收到通知
+    blogger.writeBlogPost();
+    /*输出：
+    * I just read thatToday isTue Apr 10 2018 22:00:25 GMT+0800 (中国标准时间)
+    * You didn't hear it form me,butToday isTue Apr 10 2018 22:00:25 GMT+0800 (中国标准时间)
+    * */
+    // 任何时候jill 都可以取消订阅。当博主写了另一篇博客时，jill就不会再周到通知消息
+    blogger.removeSubscriber(jill.gossip());
+    blogger.writeBlogPost();
+    /*输出：
+    * I just read thatToday isTue Apr 10 2018 22:00:25 GMT+0800 (中国标准时间)*/
+
+    //jill 也可以订阅LA Times，因为一个订阅者可以对应多个发布者
+    la_times.addSubscriber(jill.gossip);
+    //当LA Times 发行新的期刊后，jill 就会收到通知并执行 jill.gossip()方法
+    la_times.newIssue();
+    // You didn't hear it from me,but Martians have landed on Earth!
+</script>
 </html>
