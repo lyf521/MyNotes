@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <title>短信验证码</title>
+</head>
+<body>
+<input type="number" id="tel" value="13303861063">
+<button for="pwd"  id="btnCode">发送验证码</button>
+</body>
+<script>
+    var tel = {phone:13303861063}//tel 为 {phone:13303861063} 格式
+    var url = 'https://blog.csdn.net/qq_37144354/article/details/79905304'
+    sendcode(tel,url);
+    function sendcode(tel,url) {
+        //code 基础部分不用改，按钮id为 btnCode
+        code = {
+            url:url,
+            data:tel,
+            btn:"btnCode",//按钮的类名，id名
+            time:120,
+            sendSF:true,//状态判断
+            sendfn:function () {
+                if(code.sendSF){
+                    code.sendSF = false;
+                    var t = setInterval(function () {
+                        code.time--;
+                        obj.innerText="重新发送("+code.time+")";
+                        if (code.time == 0){
+                            clearInterval(t);
+                            obj.innerText='重新获取';
+                            code.sendSF = true;
+                            code.time = 120;
+                        }
+                    },1000)
+                }
+            },
+            handler:function () {
+                if (code.time >0 && code.time <120){
+                    alert('验证码30分钟才能获取一次')
+                }else {
+                    code.ajaxfn(code.url,code.data)
+                }
+            },
+            ajaxfn:function (url,data) {
+                code.sendfn();
+                /* $.ajax({
+                 type:'GET',
+                 url:url,
+                 data:data,
+                 success:function (data) {
+                 if(data == 'success'){
+                 alert( '验证码30分钟内有效，请注意查收');
+                 code.sendfn();
+                 }else if (data == 'fail'){
+                 alert( '验证码30分钟内只能发送一次，请等候');
+                 }
+                 },
+                 error: function () {
+                 alert('网络异常，通信错误，请检查你的网络');
+                 }
+                 })*/
+            }
+        }
+        var obj = document.getElementById(code.btn);
+        //ajaxfn 用于ajax发送验证码 url 为ajax接口，data：{phone:tel}为向后台传送数据
+        obj.addEventListener("click",code.handler,false)
+    }
+</script>
+</html>
