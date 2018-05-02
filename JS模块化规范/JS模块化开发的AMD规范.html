@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JS模块的AMD规范和CMD规范</title>
+</head>
+<body>
+    <sectio>
+        <h5>JS模块化编程规范</h5>
+        <p>js的模块规范包含CommonJS(node.js)、AMD(Require.js)、CMD(Sea.js)</p>
+        <p>CommonJS规范主要应用于服务器端；而前端领域主要使用AMD/CMD规范</p>
+        <p>Require.js 对模块执行预执行（先加载依赖的模块）；Sea.js 对模块懒执行（需要依赖模块时才引入）</p>
+        <p>Sea.js是国人玉伯写的，含有中文文档，写法简单，但是已经不继续维护更新，所以现在用Require.js</p>
+        <p>JS模块化出现的很早了，现在已被3大框架（vue/react/angular）、构建工具所替代(webpack、gulp)，但有时也有特殊需要。</p>
+    </sectio>
+    <section>
+        <h5>AMD</h5>
+        <p>浏览器端的模块加载不能采用“同步加载”（synchronous）,只能采用“异步加载”（asynchronous）</p>
+        <p>AMD:Asynchronous Module Definition，就是“异步模块定义”。它采用异步方式加载模块， 模块的加载不影响后面语句的运行，页面加载不需要等待。</p>
+        <p>所有依赖这个模块的语句，都定义在一个回调函数中，等到加载完成后，这个回调函数才会运行</p>
+    </section>
+    <section>
+        <h5>为什么使用Require.js?</h5>
+        <h6>实现js文件的异步加载，避免网页失去响应</h6>
+        <h6>管理模块之间的依赖性，便于代码的编写和维护</h6>
+        <p>加载多个js文件时需要引入多个js文件，会对服务器发起多次请求，并且还需要保证加载顺序，依赖性大的模块一定放到最后加载。</p>
+        <p>当依赖关系很复杂的时候，代码的编写和维护都会变的困难</p>
+        <p>
+            　　&lt;script src="1.js"&gt;&lt;/script&gt;<br>
+            　　&lt;script src="2.js"&gt;&lt;/script&gt;<br>
+            　　&lt;script src="3.js"&gt;&lt;/script&gt;<br>
+            　　&lt;script src="4.js"&gt;&lt;/script&gt;<br>
+            　　&lt;script src="5.js"&gt;&lt;/script&gt;<br>
+            　　&lt;script src="6.js"&gt;&lt;/script&gt;
+        </p>
+    </section>
+    <section>
+        <h4>Require.js的引入</h4>
+        <p>
+            &lt;script src="js/require.js"&gt;&lt;/script&gt;<br>
+            放入body底部，或者
+        </p>
+        <p>
+            &lt;script src="js/require.js"defer async="true"&gt;&lt;/script&gt;
+        </p>
+        <h4>引入自己的js代码 myjs.js</h4>
+        <p>
+            &lt;script src="js/require.js" data-main="js/myjs"&gt;&lt;/script&gt;
+        </p>
+        <p>data-main属性的作用是指定网页模块的主模块，require.js默认的文件是.js文件，所以myjs.js可以写成myjs</p>
+
+        <h4>主模块的写法</h4>
+        <p>require.js接受2个参数，一个依赖模块的 数组，所有的依赖模块写入数组，以来模块加载完后执行回调函数</p>
+        <p>另一个参数是回调函数，加载的模块以参数的形式传入该回调函数</p>
+        <pre>
+            // myjs.js 引入依赖的moduleA.js、moduleB.js、moduleC.js模块
+　　        require(['moduleA', 'moduleB', 'moduleC'], function (moduleA, moduleB, moduleC){
+　　　　        // some code here
+　　          });
+        </pre>
+
+        <h4>模块的加载方法</h4>
+        <p>主模块的依赖模块很多时，可对路径进行配置require.config的paths(逐一制定)、baseURL（统一根目录）进行配置</p>
+        <pre>
+            //paths 每个模块的路径
+            require.config({
+                paths:{
+                    "JQ":"com/js/jquery.js",
+                    "base":"com/js/base.js"
+                }
+            });
+        </pre>
+        <pre>
+            //baseURL 相同的根路径
+            require.config({
+                baseURL:"com/js",
+                paths:{
+                    "JQ":"jquery.js",
+                    "base":"base.js"
+                }
+            });
+        </pre>
+
+        <h4>AMD模块的写法——加载的模块用AMD规范</h4>
+        <pre>
+            //上面引入的base.js模块
+            define(function(){
+                //var x = 5, y = 5;
+                var total = funciton(x,y){
+                    return x+y;
+                };
+                //该模块输出的方法
+                return{
+                    total:total
+                };
+            })
+
+            //myjs.js引入base.js模块后，调用其输出的 add方法
+            require(['base'],function(base){
+                console.log(base.total(5,5))
+            })
+
+            //base.js模块依赖Jquery.js，那么 define()函数的第一个参数为 依赖模块 组成的数组，和主模块（myjs.js）写法一致
+            define(['Jquery'],function(JQ){
+                function add(){
+                    JQ.sum();
+                }
+
+                return{
+                    add:add
+                };
+            });
+        </pre>
+
+        <h4>加载非规范的模块</h4>
+        <p>引入非define定义的AMD规范模块，需要用require.config()方法定义他们的特征</p>
+        <pre>
+            //假如 eg1 和 eg2 两个库都没有采用AMD规范编写，引入他们时先定义他们的特征
+            require.config({
+                shim:{
+                    'eg1':{
+                        exports:'eg1'
+                    }，
+                    'eg2':{
+                        deps:['eg1','jquery'],
+                        exports:'eg2'
+                    }
+                }
+            })
+        </pre>
+        <p>require.config()接受一个配置对象，除了paths属性外，还有一个shim属性，专门用来配置不兼容的模块。
+           <br> 每个不兼容模块都要定义1：exports:模块输出的变量名，这个模块外部调用时的名称
+            <br>2：deps数组，表明该模块的依赖性
+        </p>
+        <pre>
+            //jQuery的插件
+            require.config({
+                shim:{
+                    'jquery.scroll':{
+                        deps:['jquery'],
+                        exports:'jQuery.fn.scroll'
+                    }
+                }
+            })
+        </pre>
+    </section>
+</body>
+</html>
