@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS3渐变</title>
+    <style>
+        .btn{
+            padding: 40px 15px;
+            background: -webkit-linear-gradient(left, #19D1AF, #459DFE);
+            background: -o-linear-gradient(right, #19D1AF, #459DFE);
+            background: -moz-linear-gradient(right, #19D1AF, #459DFE);
+            background: linear-gradient(to right, #19D1AF, #459DFE );
+        }
+        .btn2{
+            padding: 40px 15px;
+            background: -webkit-linear-gradient(-45deg, #19D1AF, #459DFE);
+            background: -o-linear-gradient(135deg, #19D1AF, #459DFE);
+            background: -moz-linear-gradient(135deg, #19D1AF, #459DFE);
+            background: linear-gradient(135deg, #19D1AF, #459DFE );
+        }
+        .btn3{
+            padding: 40px 15px;
+            background: -webkit-linear-gradient(left top, #19D1AF, #459DFE);
+            background: -o-linear-gradient(right bottom, #19D1AF, #459DFE);
+            background: -moz-linear-gradient(right bottom, #19D1AF, #459DFE);
+            background: linear-gradient(to right bottom, #19D1AF, #459DFE );
+        }
+        .btn4{
+            width: 200px;
+            height: 100px;
+            text-align: center;
+            line-height: 100px;
+
+            background: -webkit-radial-gradient(circle, #19D1AF, red, #459DFE);
+            background: -o-radial-gradient(circle, #19D1AF, red, #459DFE);
+            background: -moz-radial-gradient(circle, #19D1AF, red, #459DFE);
+            background: radial-gradient(circle, #19D1AF, red, #459DFE );
+        }
+        .btn5{
+            width: 200px;
+            height: 100px;
+            text-align: center;
+            line-height: 100px;
+            background: -webkit-radial-gradient(ellipse, #19D1AF, red, #459DFE);
+            background: -o-radial-gradient(ellipse, #19D1AF, red, #459DFE);
+            background: -moz-radial-gradient(ellipse, #19D1AF, red, #459DFE);
+            background: radial-gradient(ellipse, #19D1AF, red, #459DFE );
+        }
+        .btn6{
+            width: 200px;
+            height: 100px;
+            text-align: center;
+            line-height: 100px;
+            background: -webkit-radial-gradient(#19D1AF, red, #459DFE);
+            background: -o-radial-gradient(#19D1AF, red, #459DFE);
+            background: -moz-radial-gradient(#19D1AF, red, #459DFE);
+            background: radial-gradient(#19D1AF, red, #459DFE );
+        }
+        span{
+            display: block;
+            padding: 40px 20px;
+            font-size: 50px;
+            background-image: -webkit-linear-gradient(left top, #7983d1, #f00);
+            background-image:  -o-linear-gradient(right bottom, #7983d1, #f00);
+            background-image: -moz-linear-gradient(right bottom, #7983d1, #f00);
+            background-image: linear-gradient(to right bottom, #7983d1, #f00 );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color:transparent;
+        }
+    </style>
+</head>
+<body>
+<button class="btn">方向：左到右</button>
+<button class="btn2">角度:左上到右下</button>
+<button class="btn3">方向:左上到右下</button>
+<button class="btn4">径向渐变: 圆circle</button>
+<button class="btn5">径向渐变:椭圆ellipse</button>
+<button class="btn6">径向渐变:椭圆ellipse(默认)</button>
+<span>谷歌支持<br>文字渐变</span>
+</body>
+</html>
