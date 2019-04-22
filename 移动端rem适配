@@ -1,0 +1,25 @@
+/**检测窗口改变**/
+(function(doc, win) {
+    var docEl = doc.documentElement,
+        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+        recalc = function() {
+            var clientWidth = docEl.clientWidth;
+            if (!clientWidth) return;
+            if (clientWidth > 750) {
+                clientWidth = 750;
+                docEl.style.fontSize =  clientWidth / 16 + 'px';
+            } else {
+                docEl.style.fontSize = clientWidth / 16 + 'px';
+            }
+        };
+    if (!doc.addEventListener) return;
+    win.addEventListener(resizeEvt, recalc, true);
+    doc.addEventListener('DOMContentLoaded', recalc, false);
+})(document, window);
+
+<style>
+    $r:750/16/1rem;
+    body{
+        width:750/$r;
+    }
+</style>
